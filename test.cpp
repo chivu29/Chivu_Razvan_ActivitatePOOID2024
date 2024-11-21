@@ -1,145 +1,164 @@
-// Primul meu proiect Chivu Dorian Razvan 
-// POO
 #define _CRT_SECURE_NO_WARNINGS
-#include <iostream.h>
-
+#include <iostream> 
 using namespace std;
 
-int x;
 
-int y = 10;
+class Autobuz {
+private:
+	static int nrAutobuze;
+	const int idAutobuz;
+	int capacitate;
+	int nrPersoaneImbarcate;
+	char* producator;
 
+public:
+	//Constructor fara parametrii
+	Autobuz() :idAutobuz(++nrAutobuze) {
+		this->capacitate = 40;
+		this->nrPersoaneImbarcate = 35;
+		this->producator = new char[strlen("PRODUCATOR") + 1];
+		strcpy(producator, "Audi");
+	}
 
+	//Constructor cu parametrii
+	Autobuz(int capacitate, int nrPersoaneImbarcate, const char* producator) :idAutobuz(++nrAutobuze) {
+		if (capacitate <= 0) {
+			this->capacitate = 40; 
+		}
+		else {
+			this->capacitate = capacitate;
+		}
 
-int suma(int a, int b) {
-	int sum = 0;
-	return a + b;
-}
+		if (nrPersoaneImbarcate < 0 || nrPersoaneImbarcate > this->capacitate) {
+			this->nrPersoaneImbarcate = this->capacitate; 
+		}
+		else {
+			this->nrPersoaneImbarcate = nrPersoaneImbarcate;
+		}
 
+		if (producator == nullptr) {
+			this->producator = new char[strlen("UNKNOWN") + 1];
+			strcpy(this->producator, "UNKNOWN");
+		}
+		else {
+			this->producator = new char[strlen(producator) + 1];
+			strcpy(this->producator, producator);
+		}
+	}
 
-float suma(float a, float b) {
-	return a + b;
-}
+	//Constructor de copiere
+	Autobuz(const Autobuz& a) :idAutobuz(++nrAutobuze) {
+		this->capacitate = a.capacitate;
+		this->nrPersoaneImbarcate = a.nrPersoaneImbarcate;
+		this->producator = new char[strlen(a.producator) + 1];
+		strcpy(this->producator, a.producator);
+	}
 
+	// Operator de atribuiere (=)
+	Autobuz& operator= (const Autobuz& a) {
+		if (this == &a) {
+			return *this; // evita auto-atribuirea
+		}
+		delete[] producator;
+		this->capacitate = a.capacitate;
+		this->nrPersoaneImbarcate = a.nrPersoaneImbarcate;
+		this->producator = new char[strlen(a.producator) + 1];
+		strcpy(this->producator, a.producator);
 
-void afisare(string mesaj) {
-	cout << mesaj << endl;
-}
+		return *this;
+	}
+	// destructor
+	~Autobuz() {
+		delete[] producator;
+	}
 
-int functie(int x) {
-	return 2 * x + 3;
-}
+	//Operator << (afisare)
+	friend ostream& operator << (ostream& out, Autobuz a) {
+		out << a.capacitate << "; " << a.nrPersoaneImbarcate << "; " << a.producator << "; ";
+		return out;
+	}
 
-int f1(int* p) {
+	// getter 1
+	int getcapacitate() {
+		return capacitate;
+	}
 
-}
+	// getter 2
+	char* getproducator() {
+		return producator;
+	}
 
-int f1(int& p) {
+	//setter 1
+	void setcapacitate(int capacitate) {
+		this->capacitate = capacitate;
 
-}
+	}
+
+	//setter 2
+	void setproducator(const char* producator) {
+		delete[] this->producator;
+		this->producator = new char[strlen(producator) + 1];
+		strcpy(this->producator, producator);
+	}
+
+	// Metoda: numar locuri libere
+	int getNumarLocuriLibere() {
+		return capacitate - nrPersoaneImbarcate;
+	}
+
+	// Operator de cast la int
+	operator int() {
+		return nrPersoaneImbarcate;
+	}
+
+	// Operator >
+	bool operator>(const Autobuz& a) {
+		return capacitate > a.capacitate;
+	}
+
+};
+
+// Initializare membru static
+int Autobuz::nrAutobuze = 0;
 
 void main() {
-	x = 1;
-	
-	afisare("Buna!");
+	// Testarea constructor fara parametrii
+	Autobuz a1;
+	cout << "Autobuz 1: " << a1 << endl;
 
-	
-	int rezultat = functie(2);
-	cout << rezultat << endl;
-	
-	cout << functie(7) << endl;
-	cout << functie(3) << endl;
-	cout << functie(120) << endl;
-	cout << functie(-12) << endl;
+	// Testarea constructor cu parametrii
+	Autobuz a2(20, 15, "Mercedez");
+	cout << "Autobuz 2: " << a2 << endl;
 
-	char c = '?';
-	cout << c << endl;
-	
+	// Testare constructor de copiere
+	Autobuz a3(a2);
+	cout << "Autobuz 3 (copiat din a2): " << a3 << endl;
 
-	int z = 10;
-	cout << z << endl;
-	cout << &z << endl;
-	int* p1 = &z;
-	cout << p1 << endl;
-	cout << *p1 << endl;
+	// Testare operator= (atribuire)
+	a3 = a1;
+	cout << "Autobuz 3 dupa atribuire (a3 = a1): " << a3 << endl;
 
+	// Testare metode accesor (get si set)
+	cout << "Capacitatea lui a2: " << a2.getcapacitate() << endl;
+	a2.setcapacitate(50);
+	cout << "Noua capacitate a lui a2 (dupa set): " << a2.getcapacitate() << endl;
 
-	float vs[5]{ 1.2,2,3.3,4.2,5 };
-	cout << vs[3] << endl;
+	cout << "Producatorul lui a2: " << a2.getproducator() << endl;
+	a2.setproducator("Volvo");
+	cout << "Noul producator al lui a2 (dupa set): " << a2.getproducator() << endl;
 
-	
-	int dim = 5;
-	int* vd = new int[dim];
-	for (int i = 0; i < dim; i++) {
-		vd[i] = 8;
+	// Testare metoda getNumarLocuriLibere
+	cout << "Locuri libere in a2: " << a2.getNumarLocuriLibere() << endl;
+
+	// Testare operator de cast la int
+	cout << "Numar persoane urcate in a2 (cast la int): " << (int)a2 << endl;
+
+	// Testare operator >
+	if (a1 > a2) {
+		cout << "Autobuzul a1 are o capacitate mai mare decat a2." << endl;
 	}
-	for (int i = 0; i < dim; i++) {
-		cout << vd[i] << ", ";
+	else {
+		cout << "Autobuzul a2 are o capacitate mai mare sau egala decat a1." << endl;
 	}
-
-	int dim1 = 7;
-	float* vd1 = new float[dim1];
-
-	char* cuvant = new char[strlen("specializare") + 1];
-	strcpy(cuvant, "specializare");
-	cout << cuvant << endl;
-
-
-	
-	int v[5] = { 4,2,7,3,9 };
-
-	cout << v << endl;
-	cout << v + 1 << endl;
-	cout << v + 2 << endl;
-	cout << v + 3 << endl;
-	cout << v + 4 << endl;
-	cout << v[0] << endl;
-	cout << v[1] << endl;
-	cout << v[2] << endl;
-	cout << v[3] << endl;
-	cout << v[4] << endl;
-	cout << *v << endl;
-	cout << *v + 1 << endl;
-	cout << *(v + 1) << endl;
-	cout << *(v + 2) << endl;
-	cout << *(v + 3) << endl;
-
-	int* p = NULL;
-	p = v;
-	cout << p << endl;
-	cout << *p << endl;
-	*p = 13;
-	cout << *p << endl;
-	cout << v[0] << endl;
-
-	p++;
-	*p = 22;
-	cout << *p << endl;
-	cout << v[1] << endl;
-
-	cout << v[2] << endl;
-	cout << &v[2] << endl;
-
-
-	p = &v[2];
-	*p = 17;
-	p = v + 3;
-	*p = 33;
-
-	
-	p = v;
-	p--;
-	cout << p << endl;
-	
-	*(v + 4) = 33;
-	for (int i = 0; i < dim; i++) {
-		cout << v[i] << endl;
-	}
-
-
-	int a = 48;
-	int* pointerLaA = &a;
-	f1(pointerLaA);
-	f1(&a);
 
 }
