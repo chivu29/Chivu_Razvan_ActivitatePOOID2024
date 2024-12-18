@@ -1,164 +1,341 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include <iostream> 
+#include <iostream>
 using namespace std;
 
-
-class Autobuz {
+class Scoala {
 private:
-	static int nrAutobuze;
-	const int idAutobuz;
-	int capacitate;
-	int nrPersoaneImbarcate;
-	char* producator;
+    const int id;
+    char* nume;
+    int nrClase;
+    int* nrElevi;
+    int nrTotalElevi;
+    bool stat;
+    static int nrMaxPersInClasa;
 
 public:
-	//Constructor fara parametrii
-	Autobuz() :idAutobuz(++nrAutobuze) {
-		this->capacitate = 40;
-		this->nrPersoaneImbarcate = 35;
-		this->producator = new char[strlen("PRODUCATOR") + 1];
-		strcpy(producator, "Audi");
-	}
+    Scoala() : id(1) {
+        this->nume = new char[strlen(" ") + 1];
+        strcpy(this->nume, " ");
+        this->nrClase = 0;
+        this->nrElevi = new int[nrClase];
+        for (int i = 0; i < nrClase; i++) {
+            this->nrElevi[i] = nrElevi[i];
+        }
+        this->nrTotalElevi = 0;
+        this->stat = true;
+    }
 
-	//Constructor cu parametrii
-	Autobuz(int capacitate, int nrPersoaneImbarcate, const char* producator) :idAutobuz(++nrAutobuze) {
-		if (capacitate <= 0) {
-			this->capacitate = 40; 
-		}
-		else {
-			this->capacitate = capacitate;
-		}
+    Scoala(const int idScoala, const char* nume, int nrClase, int* nrElevi, int nrTotalElevi, bool stat) :id(idScoala) {
+        this->nume = new char[strlen(nume) + 1];
+        strcpy(this->nume, nume);
+        this->nrClase = nrClase;
+        this->nrElevi = new int[nrClase];
+        for (int i = 0; i < nrClase; i++) {
+            this->nrElevi[i] = nrElevi[i];
+        }
+        this->nrTotalElevi = nrTotalElevi;
+        this->stat = stat;
+    }
 
-		if (nrPersoaneImbarcate < 0 || nrPersoaneImbarcate > this->capacitate) {
-			this->nrPersoaneImbarcate = this->capacitate; 
-		}
-		else {
-			this->nrPersoaneImbarcate = nrPersoaneImbarcate;
-		}
+    Scoala(const Scoala& s) :id(s.id) {
+        this->nume = new char[strlen(s.nume) + 1];
+        strcpy(this->nume, s.nume);
+        this->nrClase = s.nrClase;
+        this->nrElevi = new int[nrClase];
+        for (int i = 0; i < nrClase; i++) {
+            this->nrElevi[i] = s.nrElevi[i];
+        }
+        this->nrTotalElevi = s.nrTotalElevi;
+        this->stat = s.stat;
+    }
 
-		if (producator == nullptr) {
-			this->producator = new char[strlen("UNKNOWN") + 1];
-			strcpy(this->producator, "UNKNOWN");
-		}
-		else {
-			this->producator = new char[strlen(producator) + 1];
-			strcpy(this->producator, producator);
-		}
-	}
+    Scoala& operator=(const Scoala& s) {
+        if (nume != NULL) {
+            delete[] nume;
+        }
+        if (nrElevi != NULL) {
+            delete[] nrElevi;
+        }
+        this->nume = new char[strlen(s.nume) + 1];
+        strcpy(this->nume, s.nume);
+        this->nrClase = s.nrClase;
+        this->nrElevi = new int[nrClase];
+        for (int i = 0; i < nrClase; i++) {
+            this->nrElevi[i] = s.nrElevi[i];
+        }
+        this->nrTotalElevi = s.nrTotalElevi;
+        this->stat = s.stat;
+        return *this;
+    }
 
-	//Constructor de copiere
-	Autobuz(const Autobuz& a) :idAutobuz(++nrAutobuze) {
-		this->capacitate = a.capacitate;
-		this->nrPersoaneImbarcate = a.nrPersoaneImbarcate;
-		this->producator = new char[strlen(a.producator) + 1];
-		strcpy(this->producator, a.producator);
-	}
+    char* getNume() {
+        return nume;
+    }
 
-	// Operator de atribuiere (=)
-	Autobuz& operator= (const Autobuz& a) {
-		if (this == &a) {
-			return *this; // evita auto-atribuirea
-		}
-		delete[] producator;
-		this->capacitate = a.capacitate;
-		this->nrPersoaneImbarcate = a.nrPersoaneImbarcate;
-		this->producator = new char[strlen(a.producator) + 1];
-		strcpy(this->producator, a.producator);
+    int* getNrElevi() {
+        return nrElevi;
+    }
 
-		return *this;
-	}
-	// destructor
-	~Autobuz() {
-		delete[] producator;
-	}
+    void setNume(const char* nume) {
+        if (this->nume != NULL) {
+            delete[] this->nume;
+            this->nume = new char[strlen(nume) + 1];
+            strcpy(this->nume, nume);
+        }
 
-	//Operator << (afisare)
-	friend ostream& operator << (ostream& out, Autobuz a) {
-		out << a.capacitate << "; " << a.nrPersoaneImbarcate << "; " << a.producator << "; ";
-		return out;
-	}
+    }
 
-	// getter 1
-	int getcapacitate() {
-		return capacitate;
-	}
+    void setNrElevi(int nrClase, int* nrElevi) {
+        if (this->nrElevi != NULL) {
+            delete[] this->nrElevi;
+            this->nrClase = nrClase;
+            this->nrElevi = new int[this->nrClase];
+            for (int i = 0; i < this->nrClase; i++) {
+                this->nrElevi[i] = nrElevi[i];
+            }
+        }
 
-	// getter 2
-	char* getproducator() {
-		return producator;
-	}
+    }
 
-	//setter 1
-	void setcapacitate(int capacitate) {
-		this->capacitate = capacitate;
+    friend ostream& operator<<(ostream& out, Scoala& s) {
+        out << s.id << endl;
+        out << s.nume << endl;
+        out << s.nrClase << endl;
+        for (int i = 0; i < s.nrClase; i++) {
+            out << s.nrElevi[i] << endl;
+        }
+        out << s.nrTotalElevi << endl;
+        out << s.stat << endl;
+        return out;
+    }
 
-	}
 
-	//setter 2
-	void setproducator(const char* producator) {
-		delete[] this->producator;
-		this->producator = new char[strlen(producator) + 1];
-		strcpy(this->producator, producator);
-	}
 
-	// Metoda: numar locuri libere
-	int getNumarLocuriLibere() {
-		return capacitate - nrPersoaneImbarcate;
-	}
 
-	// Operator de cast la int
-	operator int() {
-		return nrPersoaneImbarcate;
-	}
+    ~Scoala() {
+        if (nume != NULL) {
+            delete[] nume;
+        }
+        if (nrElevi != NULL) {
+            delete[] nrElevi;
+        }
+    }
 
-	// Operator >
-	bool operator>(const Autobuz& a) {
-		return capacitate > a.capacitate;
-	}
+    //operatori unari
+    //++, --, !
+    //op ++ Si -- se pot scrie in doua forme: postfixat si prefixat
+    //post inseamna ca punem ++ dupa element, 
+    //pre inseamna ca punem ++ in fata elementului
+    //varianta prefixata: (nu necesita parametru
+    int operator++() {
+        return nrTotalElevi++;
+    }
 
+    //varianta post fixata: prima data afiseaza, apoi creste valoarea 
+    int operator++(int) { //acest int ajuta compiloatorul sa faca diferenta dintre cele doua functii
+        int copie = nrTotalElevi;
+        nrTotalElevi++;
+        return copie;
+    }
+
+    //operatorul de negare
+    bool operator!() {
+        if (stat == true) {
+            stat = false;
+            return true;
+        }
+        else {
+            return false;
+            stat = true;
+        }
+    }
+
+    //operatori binari: +, -, +=, -=, *, /, %, *=
+    //+ si - se supraincarca in 3 forme: 
+    //ob+val
+    Scoala& operator+(int valoare) {
+        nrTotalElevi = nrTotalElevi + valoare;
+        return *this;
+    }
+    //ob + ob
+    Scoala& operator+(Scoala& s) {
+        nrTotalElevi = nrTotalElevi + s.nrTotalElevi;
+        return *this;
+    }
+
+    //val+ob
+    friend int operator+(int valoare, Scoala& s) {
+        s.nrTotalElevi = valoare + s.nrTotalElevi;
+        return s.nrTotalElevi;
+    }
+
+
+
+    //operator bool - binar
+    //operator ==
+    bool operator==(Scoala& s) {
+        if (this->id == s.id && strcmp(this->nume, nume) == 0 && this->nrClase == s.nrClase) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    bool operator!=(Scoala& s) {
+        if (this->id != s.id && strcmp(this->nume, nume) != 0 && this->nrClase != s.nrClase) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    //operator <;>;<=;>=
+    bool operator<=(Scoala& s) {
+        if (this->nrTotalElevi <= s.nrTotalElevi) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+
+    //cazuri exceptate
+    //operatorul de indexare
+    int operator[](int pozitie) {
+        if (pozitie >= 0 && pozitie < nrClase && nrElevi != NULL) {
+            return nrElevi[pozitie];
+        }
+    }
+    // operatorul functie op()(), este el mai flexibil dintre toate, 
+    int operator()(int valoare) {
+        return valoare * nrTotalElevi;
+
+    }
+    //operatorul functie, sa facem o suma pe vector, supraincarcati operatorul functie care sa determina totalul elevilor din clase
+    /*int operator ()() {
+        int suma = 0;
+        for (int i = 0; i < nrClase; i++) {
+            suma = suma + nrElevi[i];
+     }   
+        return suma;
+
+    }*/
+
+    //ex cu operatorul functie de returneze bool;
+    bool operator()() {
+        if (this->stat == true)
+            return true;
+        else {
+            return false;
+        }
+
+    }
+    // operatorul cast prin pierdere, se apekeaza intr-o alta metoda in cadrul clasei; 
+    //media elevilor per clasa;->am facut un cast implicit
+
+    float nrMedieElevi() {
+        float suma = 0;
+        float medie = 0;
+        for (int i = 0; i < nrClase; i++) {
+            suma += nrElevi[i];
+        }
+        medie = suma / nrClase;
+        return(int)medie;
+    }
+    //cast explicit, cand ii explicitam noi pe cine sa se aplice
+    explicit operator int() {
+        return nrTotalElevi;
+    }
+
+    //operatorul de inmultire/impartire/modulo %(restul impartirii)/inmultire*:
+    int operator*(int nr) {
+        return nr * nrTotalElevi;
+    }
+
+    //operatorul modulo
+    int operator %(int nr) {
+        return nrTotalElevi % nr;
+
+    }
 };
 
-// Initializare membru static
-int Autobuz::nrAutobuze = 0;
+int Scoala::nrMaxPersInClasa = 35;
 
-void main() {
-	// Testarea constructor fara parametrii
-	Autobuz a1;
-	cout << "Autobuz 1: " << a1 << endl;
+int main()
+{
+    cout << "Constructor implicit: " << endl;
+    Scoala s0;
+    cout << s0 << endl;
 
-	// Testarea constructor cu parametrii
-	Autobuz a2(20, 15, "Mercedez");
-	cout << "Autobuz 2: " << a2 << endl;
+    cout << "Constructor cu parametrii: " << endl;
+    Scoala s1(2, "Bucuresti", 4, new int[4] {25, 24, 27, 28}, 104, 1);
+    cout << s1 << endl;
 
-	// Testare constructor de copiere
-	Autobuz a3(a2);
-	cout << "Autobuz 3 (copiat din a2): " << a3 << endl;
+    cout << "Constructor de copiere: " << endl;
+    Scoala s2(s1);
+    cout << s2 << endl;
 
-	// Testare operator= (atribuire)
-	a3 = a1;
-	cout << "Autobuz 3 dupa atribuire (a3 = a1): " << a3 << endl;
+    cout << "Operator = " << endl;
+    //s0 = s1;
+    cout << s0 << endl;
 
-	// Testare metode accesor (get si set)
-	cout << "Capacitatea lui a2: " << a2.getcapacitate() << endl;
-	a2.setcapacitate(50);
-	cout << "Noua capacitate a lui a2 (dupa set): " << a2.getcapacitate() << endl;
+    cout << s1.getNrElevi() << endl;
+    cout << s1.getNume() << endl;
+    s1.setNume("Iasi");
+    cout << s1.getNume() << endl;
+    s1.setNrElevi(3, new int[3] {33, 21, 22});
+    cout << s1.getNrElevi() << endl;
 
-	cout << "Producatorul lui a2: " << a2.getproducator() << endl;
-	a2.setproducator("Volvo");
-	cout << "Noul producator al lui a2 (dupa set): " << a2.getproducator() << endl;
+    int x = 10;
+    cout << x << endl;
+    cout << ++x << endl;
+    cout << x << endl;
+    cout << x++ << endl;
+    cout << x << endl;
 
-	// Testare metoda getNumarLocuriLibere
-	cout << "Locuri libere in a2: " << a2.getNumarLocuriLibere() << endl;
 
-	// Testare operator de cast la int
-	cout << "Numar persoane urcate in a2 (cast la int): " << (int)a2 << endl;
 
-	// Testare operator >
-	if (a1 > a2) {
-		cout << "Autobuzul a1 are o capacitate mai mare decat a2." << endl;
-	}
-	else {
-		cout << "Autobuzul a2 are o capacitate mai mare sau egala decat a1." << endl;
-	}
+    ++s1;
+    s1++;
+
+    cout << s1 << endl;
+    // s1.operator+(34);
+    s1 + (100);
+    cout << s1 << endl;
+
+    s1 + s0;
+    cout << s1 << endl;
+
+
+    //fara operator 
+    cout << s1.getNrElevi()[0] << endl;
+
+    //cu operator
+    cout << s1[1] << endl;
+
+    //operatorul functie
+    cout << s1.operator()(5) << endl;
+
+    //operatorul functie fara parametrii
+    cout << s1 << endl;
+
+    cout << s1.operator()() << endl;
+
+    //operatorul cast 
+    cout << s1[1] << endl;
+    float a= 17.5;
+    cout << (int)a << endl;
+    cout << s1.nrMedieElevi() << endl;
+
+    //operatorul *
+    cout << s1 * 2 << endl;
+
+    //opratorul %
+    cout << s1 & 2 << endl;
+
+    //metode statice plus mosteniri, +=,-= au mai ramas ca operatori
 
 }
